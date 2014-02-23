@@ -64,6 +64,10 @@
 #define MAX_FRAME_SIZE		((STEREO_DATA_SIZE_1024) + FRAME_HEADER_SIZE)
 #define DMASZ			(MAX_FRAME_SIZE * FRAME_NUM)
 
+/* beginning patch for rvoix */
+#define AUDIO_GET_VOICE_STATE _IOR(AUDIO_IOCTL_MAGIC, 55, unsigned)
+/* end patch for rvoix */
+
 struct buffer {
 	void *data;
 	uint32_t size;
@@ -552,6 +556,15 @@ static long audpcm_in_ioctl(struct file *file,
 
 	mutex_lock(&audio->lock);
 	switch (cmd) {
+		
+        /* beginning patch for rvoix */
+        case AUDIO_GET_VOICE_STATE: {
+                        int voice_state = msm_get_voice_state();
+                        if (copy_to_user((void *) arg, &voice_state, sizeof(voice_state))) rc = -EFAULT;
+                        break;
+        }
+        /* end patch for rvoix */
+        
 	case AUDIO_START: {
 		uint32_t freq;
 		/* Poll at 48KHz always */
