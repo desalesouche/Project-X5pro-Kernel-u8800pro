@@ -62,7 +62,7 @@ static struct pil_device *find_peripheral(const char *str)
 	return dev;
 }
 
-#define IOMAP_SIZE SZ_1M
+#define IOMAP_SIZE SZ_4M
 
 static int load_segment(const struct elf32_phdr *phdr, unsigned num,
 		struct pil_device *pil)
